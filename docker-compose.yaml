@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  step_function_local:    
+    container_name: "${CONTAINER_NAME-stepfunction_local}"
+    image: amazon/aws-stepfunctions-local    
+    ports:
+      - "8083:8083"
+    env_file: .env
+    volumes:
+      - ./statemachine/test/MockConfigFile.json:/home/StepFunctionsLocal/MockConfigFile.json
+  

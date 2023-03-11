@@ -1,0 +1,75 @@
+{
+  "StateMachines": {
+    "backup": {
+      "TestCases": {
+        "ECSServicesAreRunning": {
+          "ScaleInECSServices": "ScaleInECSLambdaMockedSuccess",
+          "CheckStatusECSServices": "CheckStatusECSServicesLambdaRunningTrue"
+        },
+        "ECSServicesAreStopped": {
+          "ScaleInECSServices": "ScaleInECSLambdaMockedSuccess",
+          "CheckStatusECSServices": "CheckStatusECSServicesLambdaRunningFalse"
+        },
+        "ScaleInServiceLambdaError": {
+          "ScaleInECSServices": "ScaleInECSServiceLambdaMockedThrowError",
+          "CheckStatusECSServices": "CheckStatusECSServicesLambdaRunningTrue"
+        },
+        "CheckStatusLambdaError": {
+          "ScaleInECSServices": "ScaleInECSLambdaMockedSuccess",
+          "CheckStatusECSServices": "CheckStatusLambdaMockedThrowError"
+        }
+      }
+    }
+  },
+  "MockedResponses": {
+    "ScaleInECSLambdaMockedSuccess": {
+      "0": {
+        "Return": {
+          "StatusCode": 200,
+          "Payload": {
+            "statusCode": 200,
+            "body": "{\"message\": \"task count is set to 0\"}"
+          }
+        }
+      }
+    },
+    "CheckStatusECSServicesLambdaRunningTrue": {
+      "0": {
+        "Return": {
+          "StatusCode": 200,
+          "Payload": {
+            "statusCode": 200,
+            "services_running": true
+          }
+        }
+      }
+    },
+    "CheckStatusECSServicesLambdaRunningFalse": {
+      "0": {
+        "Return": {
+          "StatusCode": 200,
+          "Payload": {
+            "statusCode": 200,
+            "services_running": false
+          }
+        }
+      }
+    },
+    "ScaleInECSServiceLambdaMockedThrowError": {
+      "0-3": {
+        "Throw": {
+          "Error": "CustomValidationError",
+          "Cause": "ECS Cluster does not exist"
+        }
+      }
+    },
+    "CheckStatusLambdaMockedThrowError": {
+      "0-3": {
+        "Throw": {
+          "Error": "CustomValidationError",
+          "Cause": "Can not get ECS task status"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "Comment": "State Machine to take application backup",
+  "StartAt": "ScaleInECSServices",
+  "States": {
+    "ScaleInECSServices": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "OutputPath": "$.Payload",
+      "Parameters": {
+        "Payload.$": "$",
+        "FunctionName": "${scale_in_ecs_instance}"
+      },
+      "Next": "CheckStatusECSServices",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "Final"
+        }
+      ]
+    },
+    "CheckStatusECSServices": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "OutputPath": "$.Payload",
+      "Parameters": {
+        "Payload.$": "$",
+        "FunctionName": "${check_status_ecs_services}"
+      },
+      "Next": "AreAllServicesOffline?",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "Final"
+        }
+      ]
+    },
+    "AreAllServicesOffline?": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.services_running",
+          "BooleanEquals": false,
+          "Next": "Final"
+        },
+        {
+          "Variable": "$.services_running",
+          "BooleanEquals": true,
+          "Next": "WaitFor10Seconds"
+        }
+      ]
+    },
+    "WaitFor10Seconds": {
+      "Type": "Wait",
+      "Seconds": 10,
+      "Next": "CheckStatusECSServices"
+    },
+    "Final": {
+      "Type": "Pass",
+      "End": true
+    }
+  }
+}
