@@ -7,7 +7,7 @@
       "Resource": "arn:aws:states:::lambda:invoke",
       "OutputPath": "$.Payload",
       "Parameters": {
-        "Payload.$": "$",
+        "Payload.$": "$.ecs_cluster_name",
         "FunctionName": "${scale_in_ecs_instance}"
       },
       "Next": "CheckStatusECSServices",

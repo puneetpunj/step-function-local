@@ -47,6 +47,21 @@ check_status_lambda_error:
 		--input file://events/sfn_valid_input.json \
 		--no-cli-pager
 
+invalid_input:
+	aws stepfunctions start-execution \
+		--endpoint http://localhost:8083 \
+		--name InvalidInputExecution \
+		--state-machine ${STATE_MACHINE_ARN}#InvalidInput \
+		--input file://events/sfn_invalid_input.json \
+		--no-cli-pager
+
+invalid_input_test:
+	aws stepfunctions get-execution-history \
+		--endpoint http://localhost:8083 \
+		--execution-arn ${STATE_MACHINE_EXECUTION_ARN}:InvalidInputExecution \
+		--query 'events[?type==`ExecutionFailed`]' \
+		--no-cli-pager
+
 ecs_services_running_test:
 	aws stepfunctions get-execution-history \
 		--endpoint http://localhost:8083 \
@@ -75,9 +90,9 @@ check_status_lambda_error_test:
 		--query 'events[?type==`TaskFailed`]' \
 		--no-cli-pager
 
-setup_all: ecs_services_running ecs_services_stopped scale_in_service_lambda_error check_status_lambda_error
+setup_all: ecs_services_running ecs_services_stopped scale_in_service_lambda_error check_status_lambda_error invalid_input
 	
-test_all: ecs_services_running_test ecs_services_stopped_test scale_in_service_lambda_error_test check_status_lambda_error_test
+test_all: ecs_services_running_test ecs_services_stopped_test scale_in_service_lambda_error_test check_status_lambda_error_test invalid_input_test
 
 describe_sf:
 	aws stepfunctions describe-state-machine \

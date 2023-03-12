@@ -17,6 +17,10 @@
         "CheckStatusLambdaError": {
           "ScaleInECSServices": "ScaleInECSLambdaMockedSuccess",
           "CheckStatusECSServices": "CheckStatusLambdaMockedThrowError"
+        },
+        "InvalidInput": {
+          "ScaleInECSServices": "ScaleInECSLambdaMockedSuccess",
+          "CheckStatusECSServices": "CheckStatusECSServicesLambdaRunningTrue"
         }
       }
     }

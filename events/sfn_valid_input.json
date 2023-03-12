@@ -1,5 +1,3 @@
 {
-  "data": {
-    "skip-scale-out": "true"
-  }
+  "ecs_cluster_name": "test"
 }
