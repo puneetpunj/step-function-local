@@ -1,5 +1,4 @@
 version: "3.8"
-
 services:
   step_function_local:    
     container_name: "${CONTAINER_NAME-stepfunction_local}"
