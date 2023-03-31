@@ -1,4 +1,3 @@
-ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 STATE_MACHINE_NAME=backup
 STATE_MACHINE_DEFINITION_FILE=file://statemachine/${STATE_MACHINE_NAME}.json
 STATE_MACHINE_ARN=arn:aws:states:ap-southeast-2:123456789013:stateMachine:${STATE_MACHINE_NAME}
